@@ -1,0 +1,38 @@
+clearvars
+load('JOlogBUS93_16_10_25.mat');
+load('JOLogBUS93_ritorno_16_10_25.mat');
+
+figure
+plot(PositionAndata.Timestamp, PositionAndata.speed);
+title('velocità')
+
+figure
+plot(PositionAndata.Timestamp,PositionAndata.hacc);
+title('errore posizione')
+
+figure
+plot(AccelerationAndata.Timestamp,AccelerationAndata.X);
+title('accelerazione')
+
+FFT_accelerationdata = fft(AccelerationAndata.X,[],1);
+
+figure
+plot(abs(FFT_accelerationdata));
+title('FFT accelerazione')
+
+dt = 1/20; %1 fratto la freq di campionamento
+a = gradient(PositionAndata.speed, dt); %derivata della velocità
+
+figure
+plot(PositionAndata.Timestamp, a);
+title('accelerazione ricavata dalla velocità derivando')
+
+fs = 20;
+N = length(abs(fft(a)));
+f = (0:N-)
+
+FFT_accelerationderivato = fft(a);
+figure
+plot(abs(FFT_accelerationderivato));
+title('FFT accelerazione derivata')
+
