@@ -46,3 +46,10 @@ figure
 plot(f_GPS, abs(FFT_accelerationderivato));
 title('FFT accelerazione derivata')
 
+
+FFT_accelerationdata(end/4:end) = 0;
+
+inverse = ifft ((FFT_accelerationdata));
+
+figure
+plot(AccelerationAndata.Timestamp, abs(inverse));
