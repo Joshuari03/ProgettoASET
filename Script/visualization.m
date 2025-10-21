@@ -14,6 +14,8 @@ grid minor
 figure
 plot(time_acc, acc);
 title('accelerazione')
+grid on
+grid minor
 
 figure
 plot(f_acc, abs(A));
