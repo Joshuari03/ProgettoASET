@@ -1,0 +1,72 @@
+%% Pulizia variabili e caricamento dati
+clearvars
+load('JOlogBUS93_16_10_25.mat');
+load('JOLogBUS93_ritorno_16_10_25.mat');
+
+%% accelerometro
+
+A = fft(AccelerationAndata.X);
+
+fs_acc = 20;
+N = length(abs(A));
+f_acc = (0:N-1)*(fs_acc/N);
+
+half_len = (length(A)+1)/2;
+A_half = A(1:half_len);
+
+A_half(floor(end/10):end) = 0;
+
+A_rec = [A_half; conj(A_half(end:-1:2))];
+
+a_cleaned = ifft ((A_rec));
+
+%% derivata velocità
+
+dt = 1/20; %1 fratto la freq di campionamento
+dv = gradient(PositionAndata.speed, dt); %derivata della velocità
+
+
+DV = fft(dv);
+
+
+fs_GPS = 1;
+N = length(abs(DV));
+f_GPS = (0:N-1)*(fs_GPS/N);
+
+
+
+
+%% accelerometro 2
+
+A = fft(AccelerationRitorno.X);
+
+fs_acc = 20;
+N = length(abs(A));
+f_acc = (0:N-1)*(fs_acc/N);
+
+half_len = (length(A)+1)/2;
+A_half = A(1:half_len);
+
+A_half(floor(end/10):end) = 0;
+
+A_rec = [A_half; conj(A_half(end:-1:2))];
+
+a_cleaned = ifft ((A_rec));
+
+%% derivata velocità 2
+
+dt = 1/20; %1 fratto la freq di campionamento
+dv = gradient(PositionRitorno.speed, dt); %derivata della velocità
+
+
+DV = fft(dv);
+
+
+fs_GPS = 1;
+N = length(abs(DV));
+f_GPS = (0:N-1)*(fs_GPS/N);
+
+
+%% data for plots
+time_acc = AccelerationAndata.Timestamp;
+time_GPS = PositionAndata.Timestamp;
