@@ -14,4 +14,7 @@ plot(t_acc, v_interp);
 
 p_acc = m*a.*v_interp;
 figure
-plot(p_acc);
+plot(t_acc , p_acc);
+grid on
+grid minor
+

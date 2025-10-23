@@ -24,7 +24,7 @@ elseif mod(length(A),2)~=0
     half_len = (length(A)+1)/2;
 end
 A_half = A(1:half_len);
-f_cut = 2;
+f_cut = 4;
 A_half(round(f_cut * length(A_half)/ fs_acc):end) = 0;
 
 if mod(length(A),2)==0
