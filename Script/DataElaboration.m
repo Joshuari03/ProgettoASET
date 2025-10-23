@@ -3,11 +3,12 @@ clearvars
 %load('JOlogBUS93_16_10_25.mat');
 %load('JOLogBUS93_ritorno_16_10_25.mat');
 load("Miki_973_A_1.mat");
+%load("973 ritorno linate-forlanini m4.mat");
 %% data for plots
 time_acc = Acceleration.Timestamp;
 time_GPS = Position.Timestamp;
 speed = Position.speed;
-acc = Acceleration.X;
+acc = Acceleration.Y;
 acc = acc - mean(acc);
 %% accelerometro
 
