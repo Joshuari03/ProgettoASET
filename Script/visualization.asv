@@ -1,5 +1,4 @@
-
-%% plot vari
+%% plot velocità GPS
 
 figure
 plot(time_GPS, speed*3.6);
@@ -12,8 +11,10 @@ grid minor
 % title('errore posizione')
 
 figure
-plot(time_acc,AccelerationAndata.X);
+plot(time_acc, acc);
 title('accelerazione')
+grid on
+grid minor
 
 figure
 plot(f_acc, abs(A));
