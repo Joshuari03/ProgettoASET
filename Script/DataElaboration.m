@@ -1,15 +1,25 @@
 %% Pulizia variabili e caricamento dati
 clearvars
+%<<<<<<< Updated upstream
 %load('JOlogBUS93_16_10_25.mat');
 %load('JOLogBUS93_ritorno_16_10_25.mat');
-load("Miki_973_A_1.mat");
-%load("973 ritorno linate-forlanini m4.mat");
+%load("Miki_973_A_1.mat");
+%<<<<<<< Updated upstream
+load("973 ritorno linate-forlanini m4.mat");
+%=======
+%=======
+% load('JOlogBUS93_16_10_25.mat');
+% load('JOLogBUS93_ritorno_16_10_25.mat');
+%load('973 ritorno linate-forlanini m4.mat');
+%>>>>>>> Stashed changes
+%>>>>>>> Stashed changes
 %% data for plots
 time_acc = Acceleration.Timestamp;
 time_GPS = Position.Timestamp;
 speed = Position.speed;
 acc = Acceleration.Y;
 acc = acc - mean(acc);
+
 %% accelerometro
 
 A = fft(acc);
@@ -34,7 +44,7 @@ elseif mod(length(A),2)~=0
 end
 
 a_cleaned = ifft ((A_rec));
-
+a_mmean = movmean(acc, 10);
 %% derivata velocità
 
 dt = 1/20; %1 fratto la freq di campionamento

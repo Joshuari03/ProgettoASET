@@ -14,7 +14,7 @@ title('errore posizione')
 %% plot accelerazione grezza accelerometro
 figure
 plot(time_acc, acc);
-title('accelerazione')
+title('accelerazione grezza')
 grid on
 grid minor
 
@@ -36,6 +36,13 @@ title('FFT accelerazione derivata')
 %% plot accelerazione pulita
 figure
 plot(time_acc, a_cleaned);
-title('Accelerazione pulita')
+title('accelerazione pulita')
 grid on
 grid minor
+%% plot accelerazione grezza + media mobile
+figure
+plot(time_acc, a_mmean);
+title('accelerazione grezza + media mobile')
+grid on
+grid minor
+
