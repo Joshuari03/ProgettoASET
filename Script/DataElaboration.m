@@ -1,17 +1,17 @@
 %% Pulizia variabili e caricamento dati
 clearvars
-load('JOlogBUS93_16_10_25.mat');
-load('JOLogBUS93_ritorno_16_10_25.mat');
-
+%load('JOlogBUS93_16_10_25.mat');
+%load('JOLogBUS93_ritorno_16_10_25.mat');
+load("Miki_973_A_1.mat");
 %% data for plots
-time_acc = AccelerationAndata.Timestamp;
-time_GPS = PositionAndata.Timestamp;
-speed = PositionAndata.speed;
-acc = AccelerationAndata.X;
-
+time_acc = Acceleration.Timestamp;
+time_GPS = Position.Timestamp;
+speed = Position.speed;
+acc = Acceleration.X;
+acc = acc - mean(acc);
 %% accelerometro
 
-A = fft(AccelerationAndata.X);
+A = fft(acc);
 
 fs_acc = 20;
 N = length(abs(A));
@@ -37,7 +37,7 @@ a_cleaned = ifft ((A_rec));
 %% derivata velocità
 
 dt = 1/20; %1 fratto la freq di campionamento
-dv = gradient(PositionAndata.speed, dt); %derivata della velocità
+dv = gradient(speed, dt); %derivata della velocità
 
 
 DV = fft(dv);
@@ -49,48 +49,3 @@ f_GPS = (0:N-1)*(fs_GPS/N);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% data for plots
-time_acc = AccelerationRitorno.Timestamp;
-time_GPS = PositionRitorno.Timestamp;
-speed = PositionRitorno.speed;
-acc = AccelerationRitorno.X;
-
-%% accelerometro 2
-
-A = fft(AccelerationRitorno.X);
-
-fs_acc = 20;
-N = length(abs(A));
-f_acc = (0:N-1)*(fs_acc/N);
-if mod(length(A),2)==0
-    half_len = (length(A))/2;
-elseif mod(length(A),2)~=0
-    half_len = (length(A)+1)/2;
-end
-A_half = A(1:half_len);
-f_cut = 2;
-A_half(round(f_cut * length(A_half)/ fs_acc):end) = 0;
-
-if mod(length(A),2)==0
-    A_rec = [A_half; 0; conj(A_half(end:-1:2))];
-elseif mod(length(A),2)~=0
-    A_rec = [A_half; conj(A_half(end:-1:2))];
-end
-
-
-a_cleaned = ifft ((A_rec));
-
-%% derivata velocità 2
-
-dt = 1/20; %1 fratto la freq di campionamento
-dv = gradient(PositionRitorno.speed, dt); %derivata della velocità
-
-
-DV = fft(dv);
-
-
-fs_GPS = 1;
-N = length(abs(DV));
-f_GPS = (0:N-1)*(fs_GPS/N);
-
-
