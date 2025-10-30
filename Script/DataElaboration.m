@@ -1,25 +1,31 @@
 %% Pulizia variabili e caricamento dati
 clearvars
 %<<<<<<< Updated upstream
-%load('JOlogBUS93_16_10_25.mat');
-%load('JOLogBUS93_ritorno_16_10_25.mat');
-load("Miki_973_A_1.mat");
+D =[load("Miki_973_A_1.mat");
+    load("MS_973_A_2.mat");
+    load("FA_973_A_2.mat");
+    load("JO_973_A_2.mat");
+    load("FA_973_R_1.mat");
+    load("MS_973_R_2.mat");
+    load("FA_973_R_2.mat");
+    load("JO_973_R_2.mat")];
+
 %<<<<<<< Updated upstream
-%load("973 ritorno linate-forlanini m4.mat");
 %=======
 %=======
-% load('JOlogBUS93_16_10_25.mat');
-% load('JOLogBUS93_ritorno_16_10_25.mat');
-%load('973 ritorno linate-forlanini m4.mat');
 %>>>>>>> Stashed changes
 %>>>>>>> Stashed changes
 %% data for plots
-time_acc = Acceleration.Timestamp;
-time_GPS = Position.Timestamp;
-speed = Position.speed;
-acc = Acceleration.Y;
-acc = acc - mean(acc);
 
+for i=1:size(D,1)
+    
+    time_acc = D(i).Acceleration.Timestamp;
+    time_GPS = D(i).Position.Timestamp;
+    speed = D(i).Position.speed;
+    acc = D(i).Acceleration.Y;
+    acc = acc(i) - mean(acc(i));
+
+end %ESTENDERE FOR E RICHIAMARE ENERGY IN QUESTO SCRIPT
 %% accelerometro
 
 A = fft(acc);
