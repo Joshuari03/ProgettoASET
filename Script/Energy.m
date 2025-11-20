@@ -7,6 +7,10 @@ a = acc_cleaned;
 % a_pos = a; 
 m = 20e3;
 v = velocity;
+fermate = [45.461571, 9.211439;
+           45.462144, 9.218510;
+           45.462192, 9.214155;
+           ];
 
 t_s = seconds(time_acc - time_acc(1));
 g = 9.80665; % accelerazione di gravità
@@ -58,8 +62,8 @@ p_reg(p_mot_raw<0) = p_mot_raw(p_mot_raw<0)*S;
 % grid on;
 % title('d/dt Ec');
 
-p_tot = (p_mot_out+p_reg)./eta + p_aux; %assumendo la stessa efficienza sia per batt --> ruote che per ruote --> batt
-
+p_tot = (p_mot_out./eta + p_reg.*eta) + p_aux; %assumendo la stessa efficienza sia per batt --> ruote che per ruote --> batt
+p_tot_no_regen = (p_mot_out./eta) + p_aux;
 % figure
 % plot(time_acc , p_tot_regen);
 % grid on
@@ -68,9 +72,9 @@ p_tot = (p_mot_out+p_reg)./eta + p_aux; %assumendo la stessa efficienza sia per 
 
 E_tot = trapz(t_s, p_tot)/3.6e6; %in kWh
 % disp(E_no_regen);
-E_mot_out = trapz(t_s, p_mot_out)/3.6e6;
+E_mot_out = trapz(t_s, p_tot_no_regen)/3.6e6;
 %
-E_reg = trapz(t_s, p_reg)/3.6e6;
+% E_reg = trapz(t_s, p_reg)/3.6e6;
 % 
 % E_roll = trapz(t_s, p_roll)/ 3.6e6;
 % 
