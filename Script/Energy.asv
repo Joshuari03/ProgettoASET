@@ -1,4 +1,4 @@
-function [E_tot, E_mot_out] = Energy (acc_cleaned, velocity, time_gps, time_acc)
+function [E] = Energy (acc_cleaned, velocity, time_gps, time_acc)
 %time_gps = Position.Timestamp; --> dati presi dal gps
 %time_acc = Acceleration.Timestamp; --> dati presi dall'accelerometro
 
@@ -66,11 +66,11 @@ p_tot = (p_mot_out+p_reg)./eta + p_aux; %assumendo la stessa efficienza sia per 
 % grid minor
 % title('potenza istantanea batteria con rigenerazione')
 
-E_tot = trapz(t_s, p_tot)/3.6e6; %in kWh
+E = trapz(t_s, p_tot)/3.6e6; %in kWh
 % disp(E_no_regen);
-E_mot_out = trapz(t_s, p_mot_out)/3.6e6;
-%
-E_reg = trapz(t_s, p_reg)/3.6e6;
+E_mot_out = trapz(t_s, p_mot_out);
+% 
+E_reg = trapz(t_s, p_reg);
 % 
 % E_roll = trapz(t_s, p_roll)/ 3.6e6;
 % 

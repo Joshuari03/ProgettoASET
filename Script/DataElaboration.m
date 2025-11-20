@@ -12,10 +12,8 @@ D =[load("Miki_973_A_1.mat");
 
 %<<<<<<< Updated upstream
 %=======
-%=======
-%>>>>>>> Stashed changes
-%>>>>>>> Stashed changes
- E_no_regen = NaN(size(D,1),1);
+ E_tot = NaN(size(D,1), 1); %con rigenerazione
+ E_no_regen = NaN(size(D,1), 1); %senza rigenerazione
 %% data for plots
 
 for i=1:size(D,1)
@@ -70,5 +68,5 @@ for i=1:size(D,1)
     f_GPS = (0:N-1)*(fs_GPS/N);
     
     %% richiamo energy
-   E_no_regen(i) = Energy (a_filt, speed, time_GPS, time_acc);
+    [E_tot(i), E_no_regen(i)] = Energy(a_filt, speed, time_GPS, time_acc); %in kWh
 end
