@@ -19,11 +19,11 @@ eta = 0.8; % efficienza trasmissione tra batteria e ruote
 v_interp = interp1(time_gps, v, time_acc, 'linear', 'extrap');
 % figure
 % plot(time_gps, v);
-figure
-plot(time_acc, v_interp*3.6);
-grid on
-grid minor
-title('velocità interpolata km/h')
+% figure
+% plot(time_acc, v_interp*3.6);
+% grid on
+% grid minor
+% title('velocità interpolata km/h')
 
 %% Potenza servizi ausiliari
 p_aux = 5000;
@@ -31,11 +31,11 @@ p_aux = 5000;
 %% calcolo potenza istantanea
 p_acc = m *a .*v_interp;
 
-figure
-plot(time_acc , p_acc);
-grid on
-grid minor
-title('potenza istantanea (solo m*a*v)')
+% figure
+% plot(time_acc , p_acc);
+% grid on
+% grid minor
+% title('potenza istantanea (solo m*a*v)')
 
 %% calcolo potenza attrito ruota gomma
 p_roll = m * g * Crr .* v_interp;
@@ -51,11 +51,11 @@ p_mov_no_regen (p_mov_no_regen<0) = 0;  %per spiegazioni vedi appunti
 
 p_tot_no_regen = (p_mov_no_regen + p_aux)./eta; %assumendo la stessa efficienza anche per il passaggio batt --> aux
 
-figure
-plot(time_acc , p_tot_no_regen);
-grid on
-grid minor
-title('potenza istantanea batteria no regen')
+% figure
+% plot(time_acc , p_tot_no_regen);
+% grid on
+% grid minor
+% title('potenza istantanea batteria no regen')
 
 E = trapz(t_s, p_tot_no_regen)/3.6e6;
 % disp(E_no_regen);

@@ -12,10 +12,8 @@ D =[load("Miki_973_A_1.mat");
 
 %<<<<<<< Updated upstream
 %=======
-%=======
-%>>>>>>> Stashed changes
-%>>>>>>> Stashed changes
  E_no_regen = NaN(size(D,1),1);
+ time_stationary = NaN(size(D,1),1);
 %% data for plots
 
 for i=1:size(D,1)
