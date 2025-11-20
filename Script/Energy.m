@@ -7,10 +7,6 @@ a = acc_cleaned;
 % a_pos = a; 
 m = 20e3;
 v = velocity;
-fermate = [45.461571, 9.211439;
-           45.462144, 9.218510;
-           45.462192, 9.214155;
-           ];
 
 t_s = seconds(time_acc - time_acc(1));
 g = 9.80665; % accelerazione di gravità
