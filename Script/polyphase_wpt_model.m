@@ -1,0 +1,124 @@
+function P_rx = polyphase_wpt_model(d, P_tx, misalign)
+% ---------------------------------------------------------------
+%  WPT_PowerTransfer
+%
+%  Calculates the actual power that reaches the receiver side of a
+%  100‑kW, 3‑phase, poly‑phase wireless power‑transfer (WPT) system
+%  as described in the 100‑kW Polyphase WPT papers (Onar 2024–2025).
+%
+%  INPUTS
+%   d        – Transmitter–receiver air‑gap (m)  
+%   P_tx     – Transmitted power at the primary side (W)  
+%   misalign – Relative mis‑alignment (unitless, 0 = perfect,
+%              1 = complete loss of coupling).  The user may
+%              also pass a lateral offset (m) – the code will
+%              convert it to a fractional loss automatically
+%              if the value is > 1 and < 0.5*(r_t+r_r).
+%
+%  OUTPUT
+%   P_rx     – Actual power that reaches the receiver DC bus (W)
+%
+%  -----------------------------------------------------------------
+%  The model is a compact, physics‑inspired, empirical model that
+%  incorporates:
+%     • Coil geometry (diameter, inductance, mutual inductance)  
+%     • Distance dependence (∝ d^-3 for coaxial loops)  
+%     • Mis‑alignment loss (linear in offset or fractional loss)  
+%     • Resonant‑coupling efficiency (≈ k^2 scaling)  
+%     • DC‑to‑DC converter efficiency (≈ 95.7 % at nominal conditions)
+%
+%  The model assumes:
+%     – 3‑phase system, 100 kW nominal operation  
+%     – Transmitter & receiver inductances: 17.56 µH / 15 µH  
+%     – Nominal mutual inductance (phase A ↔ X) : 1.87 µH  
+%     – Nominal air‑gap (air‑gap used in the papers) : 0.17 m  
+%     – DC‑to‑DC efficiency at nominal conditions: 95.7 %
+%  -----------------------------------------------------------------
+%
+%  Example:
+%     d   = 0.18;          % 18 cm air‑gap
+%     Ptx = 100e3;          % 100 kW
+%     mis = 0.05;           % 5 % mis‑alignment
+%     Prx = WPT_PowerTransfer(d,Ptx,mis);
+%     fprintf('Delivered power = %.1f kW\n',Prx/1e3);
+% -----------------------------------------------------------------
+
+%% ---- 1. System constants  -------------------------------------
+
+% Coil dimensions (from the 100‑kW ORNL design)
+r_t = 0.375;   % Transmitter radius (m)  (750 mm diameter)
+r_r = 0.1875;  % Receiver   radius (m)  (375 mm diameter)
+
+% Nominal air‑gap used in the papers
+d0 = 0.170;    % 170 mm
+
+% Inductances (µH) – primary phase A, secondary phase X
+Lt = 17.56e-6;     % primary (A) inductance  [H]
+Lr = 15.0e-6;      % secondary (X) inductance [H]
+
+% Mutual inductance (phase A ↔ X) – measured value from the paper
+M0 = 1.87e-6;      % [H]
+
+% Nominal coupling coefficient
+k0 = abs(M0)/sqrt(Lt*Lr);          % ≈ 0.115
+
+% DC‑to‑DC converter efficiency at nominal conditions
+eta_dc_dc = 0.957;      % 95.7 %
+
+% Distance‑exponent (for coaxial circular loops, M ∝ d^-3)
+n_dist = 3;
+
+% -------------------------------------------------------------
+
+%% ---- 2. Pre‑process the mis‑alignment input -----------------
+
+% If the user has entered a lateral offset (m) instead of a fraction,
+% convert it to a fractional loss.  We assume the loss is linear in
+% offset up to the sum of coil radii, after which coupling is zero.
+if misalign > 1
+    % interpret as an offset in metres
+    offset = misalign;
+    max_offset = r_t + r_r;          % worst case offset (full decoupling)
+    frac = min(max(offset/max_offset,0),1);
+    misalign = frac;
+end
+% misalign must be between 0 and 1
+misalign = max(min(misalign,1),0);
+
+%% ---- 3. Effective coupling coefficient -----------------------
+
+% Distance scaling (assumes d >= d0)
+if d < d0
+    % if the coils get closer than the nominal gap we clamp to nominal
+    d_eff = d0;
+else
+    d_eff = d;
+end
+
+% Coupling coefficient at the operating distance
+k_dist = k0 * (d0/d_eff)^n_dist;    % distance loss only
+
+% Mis‑alignment loss (simple linear model)
+k_eff = k_dist * (1 - misalign);
+
+% Clamp to the physical limits
+k_eff = max(min(k_eff,k0),0);
+
+%% ---- 4. Coupling efficiency (k^2 scaling) ------------------
+
+% Relative to the nominal coupling (k0), the power transfer
+% efficiency in the resonant network scales approximately with k^2.
+eta_couple = (k_eff / k0)^2;      % ranges from 0 (no coupling) to 1
+
+% Total WPT efficiency (converter + coupling)
+eta_total = eta_dc_dc * eta_couple;
+
+%% ---- 5. Delivered power -------------------------------------
+
+% Delivered power at the receiver DC bus
+P_rx = P_tx * eta_total;
+
+% Clamp to the system's rated maximum (≈ 100 kW)
+P_rx = min(P_rx, 300e3);
+
+end

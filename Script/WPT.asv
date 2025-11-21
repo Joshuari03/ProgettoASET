@@ -1,0 +1,4 @@
+%% prima parte dove ricaviamo un vettore tempi di fermate
+
+%% sfsafs
+out = polyphase_wpt_model(170,50, 570);
