@@ -57,7 +57,7 @@ Lt = 17.56e-6;     % primary (A) inductance  [H]
 Lr = 15.0e-6;      % secondary (X) inductance [H]
 
 % Mutual inductance (phase A ↔ X) – measured value from the paper
-M0 = 3.3333e-6;      % [H]
+M0 = 1.87e-6;      % [H]
 
 % Nominal coupling coefficient
 k0 = abs(M0)/sqrt(Lt*Lr);          % ≈ 0.115
@@ -89,39 +89,30 @@ misalign = max(min(misalign,1),0);
 
 % Distance scaling (assumes d >= d0)
 if d < dn
-    % if the coils get closer than the nominal gap we clamp to nominal
-   
 
-k_dist = 0.9 + 1 / (-3 - exp(-70*d+14.587787)) ;
-else
-    K = 0.9435 * (0.17)^3;
-    k_dist = K / d^3;
-end
-
-% % Coupling coefficient at the operating distance
-% k_dist = k0 * (d0/d_eff)^n_dist;    % distance loss only
-
-% Mis‑alignment loss (simple linear model)
+k_dist = 1 + 1 / (-3 - exp(-70*d+14.587787)) ;
 k_eff = k_dist * (1 - misalign);
+eta_couple = (k_eff / 1)^1;
 
-% % Clamp to the physical limits
-% k_eff = max(min(k_eff,k0),0);
+elseif d == dn
 
-%% ---- 4. Coupling efficiency (k^2 scaling) ------------------
+    eta_couple = 0.9435 * (1-misalign)^2;
 
-% Relative to the nominal coupling (k0), the power transfer
-% efficiency in the resonant network scales approximately with k^2.
-eta_couple = (k_eff / 1)^1;      % ranges from 0 (no coupling) to 1
+else
 
-% Total WPT efficiency (converter + coupling)
-eta_total = 1 * eta_couple;
+    d_eff = d;
+    k_dist = k0 * (dn/d_eff)^n_dist; 
+    k_eff = k_dist * (1 - misalign);
+    eta_couple = (k_eff / k0)^2;
+
+end
 
 %% ---- 5. Delivered power -------------------------------------
 
 % Delivered power at the receiver DC bus
-P_rx = P_tx * eta_total;
+P_rx = P_tx * eta_couple;
 
-% Clamp to the system's rated maximum (≈ 100 kW)
+% Clamp to the system's rated maximum (≈ 300 kW)
 P_rx = min(P_rx, 300e3);
 
 end

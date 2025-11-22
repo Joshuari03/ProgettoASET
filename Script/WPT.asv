@@ -29,7 +29,10 @@ fprintf('Delivered power (20 cm, 5%% mis) = %.1f kW\n',Prx/1e3);
 % Example 3 – plot efficiency vs distance (0‑30 cm) for 0 % mis‑alignment
 d_vals = 0:0.005:0.30;           % 15 cm to 30 cm
 Prx_vals = arrayfun(@(d)polyphase_wpt_model(d,Ptx,0),d_vals);
+Prx_vals1 = arrayfun(@(d)polyphase_wpt_model1(d,Ptx,0),d_vals);
 figure; plot(d_vals,Prx_vals/1e3,'LineWidth',2); grid on
+hold on
+plot(d_vals,Prx_vals1/1e3,'LineWidth',2);
 xlabel('Distance d (m)'); ylabel('Delivered Power (kW)')
 title('Delivered Power vs Distance (0% misalignment)');
 
@@ -56,29 +59,26 @@ mis_vals2 = 0:0.02:1;                % 0 % → 100 % mis‑alignment
 % Create a mesh grid of (distance, mis‑alignment) pairs
 [DM,MM] = meshgrid(d_vals,mis_vals2);
 
-% Evaluate the model over the grid (2‑D array of delivered power)
-%  NOTE: arrayfun works element‑wise for the two inputs.
+
 PRx_grid = arrayfun(@(d,mis) polyphase_wpt_model(d,Ptx,mis), DM, MM);
 
-% 3‑D surface – use kW for the Z axis so the axes are all in familiar units
+% 3D plot
 figure('Name','Delivered Power vs. Distance & Mis‑alignment','NumberTitle','off');
 surf(DM,MM,PRx_grid/1e3);
-shading interp;            % colour map of your choice
+shading interp;            
 colorbar; 
+
 hold on
 
-% --- griglia disegnata sopra la superficie ---
+% griglia sopra la superficie
 m = mesh(DM, MM, PRx_grid/1e3);
 m.FaceColor = 'none'; 
 m.EdgeColor = [0 0 0];  % griglia nera, sottile
 m.LineWidth = 0.3;
 
-hold off% show colour scale
+hold off
 
 xlabel('Distance d (m)');
 ylabel('Mis‑alignment (fraction)');
 zlabel('Delivered Power (kW)');
-title('Delivered Power as a function of Distance and Mis‑alignment');
-view(30,30);              % set a nice viewing angle
-axis tight;               % tighten axes around the data
-clim([0 max(PRx_grid(:))/1e3]);   % scale colour bar to data range
+title('Delivered Power as a function of Distance and Mis‑alignment');              
