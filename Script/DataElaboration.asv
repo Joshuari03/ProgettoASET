@@ -133,7 +133,7 @@ isAtStop_and = cellfun(@(w, x, y, z) deg2km(distance(w, x, y, z))*1000 < 30, Lat
 Stop_time_and = cellfun(@(x) sum(x)*Ts, isAtStop_and, 'UniformOutput',false); 
 
 ST_a = cell2mat(Stop_time_and);
-Mean_ST_and = mean(ST_a, 1, 'omitnan'); %Calcola il tempo medio di fermata per ogni fermata
+Mean_stop_time_and = 
 
 %RITORNO
 [Lat_Rit, Stops_Lat_Rit] = arrayfun(@(x) ndgrid(x.Position.latitude(x.Position.speed < 0.7), stops_lat_rit), D_rit, 'UniformOutput', false);
@@ -141,6 +141,3 @@ Mean_ST_and = mean(ST_a, 1, 'omitnan'); %Calcola il tempo medio di fermata per o
 
 isAtStop_rit = cellfun(@(w, x, y, z) deg2km(distance(w, x, y, z))*1000 < 30, Lat_Rit, Lon_Rit, Stops_Lat_Rit, Stops_Lon_Rit, 'UniformOutput', false);
 Stop_time_rit = cellfun(@(x) sum(x)*Ts, isAtStop_rit, 'UniformOutput', false);
-
-ST_r = cell2mat(Stop_time_rit);
-Mean_ST_rit = mean(ST_r, 1, 'omitnan');

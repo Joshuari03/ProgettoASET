@@ -20,10 +20,10 @@ v_interp = interp1(time_gps, v, time_acc, 'linear', 'extrap');
 % figure
 % plot(time_gps, v);
 % figure
-plot(time_acc, v_interp*3.6);
+% plot(time_acc, v_interp*3.6);
 % grid on
 % grid minor
-title('velocità interpolata km/h')
+% title('velocità interpolata km/h')
 
 %% Potenza servizi ausiliari
 p_aux = 5000;
@@ -34,10 +34,10 @@ p_aux = 5000;
 p_acc = m *a .*v_interp; %p_acc = d/dt Ec
 
 % figure
- plot(time_acc , p_acc);
+ % plot(time_acc , p_acc);
 % grid on
 % grid minor
-title('potenza istantanea (solo m*a*v)')
+% title('potenza istantanea (solo m*a*v)')
 
 %% calcolo potenza attrito ruota gomma
 p_roll = m * g * Crr .* v_interp;

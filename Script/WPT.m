@@ -1,7 +1,7 @@
 %% prima parte dove ricaviamo un vettore tempi di fermate
 
 %%
-clear all
+clear
 clc
 close all
 %% Condizioni nominali
@@ -15,15 +15,15 @@ fprintf('Delivered power (nominal) = %.1f kW\n',Prx/1e3);
 
 % Example 3 – plot efficiency vs distance (0‑30 cm) for 0 % mis‑alignment
 d_vals = 0:0.005:0.30;
-Ptx = 300e3;          
+Ptx = 300e3;
 mis = 0; 
 
 Prx_vals = arrayfun(@(d)polyphase_wpt_model(d,Ptx,0),d_vals);
 
-figure; 
-plot(d_vals,Prx_vals/1e3,'LineWidth',2); 
+figure;
+plot(d_vals,Prx_vals/1e3,'LineWidth',2);
 grid on
-xlabel('Distance d (m)'); ylabel('Delivered Power (kW)')
+xlabel('Distance d (m)'); ylabel('Delivered Power (kW)');
 title('Delivered Power vs Distance (0% misalignment)');
 
 %% Plot Power vs. Mis‑alignment (distance fixed to nominal)
