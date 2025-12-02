@@ -20,6 +20,8 @@ Ts = 1; %Periodo di campionamento del log
 %% ANDATA
  E_tot_a = NaN(size(D_and,1), 1); %con rigenerazione
  E_no_regen_a = NaN(size(D_and,1), 1); %senza rigenerazione
+ p_acc_a = cell(numel(D_and),1); % vettori potenza solo v*a
+ p_tot_a = cell(numel(D_and),1); % vettori potenza totale
 %% data for plots
 
 for i=1:size(D_and,1)
@@ -59,13 +61,18 @@ for i=1:size(D_and,1)
     b = ones(1, N) / N;
     a = 1;
     a_filt = filtfilt(b, a, acc); %media mobile senza introduzione di ritardo
+
+    
     %% richiamo energy
-    [E_tot_a(i), E_no_regen_a(i)] = Energy(a_filt, speed, time_GPS, time_acc); %in kWh
+    [E_tot_a(i), E_no_regen_a(i), p_acc_a{i}, p_tot_a{i}] = Energy(a_filt, speed, time_GPS, time_acc); %in kWh
 end
 
 %% RITORNO
 E_tot_r = NaN(size(D_rit,1), 1); %con rigenerazione
 E_no_regen_r = NaN(size(D_rit,1), 1); %senza rigenerazione
+p_acc_r = cell(numel(D_rit),1); % vettori potenza solo v*a
+p_tot_r = cell(numel(D_rit),1); % vettori potenza totale
+
 for i=1:size(D_and,1)
 
     time_acc = D_and(i).Acceleration.Timestamp;
@@ -133,7 +140,7 @@ isAtStop_and = cellfun(@(w, x, y, z) deg2km(distance(w, x, y, z))*1000 < 30, Lat
 Stop_time_and = cellfun(@(x) sum(x)*Ts, isAtStop_and, 'UniformOutput',false); 
 
 ST_a = cell2mat(Stop_time_and);
-Mean_stop_time_and = 
+Mean_ST_and = mean(ST_a, 1, 'omitnan'); %Calcola il tempo medio di fermata per ogni fermata
 
 %RITORNO
 [Lat_Rit, Stops_Lat_Rit] = arrayfun(@(x) ndgrid(x.Position.latitude(x.Position.speed < 0.7), stops_lat_rit), D_rit, 'UniformOutput', false);
@@ -141,3 +148,6 @@ Mean_stop_time_and =
 
 isAtStop_rit = cellfun(@(w, x, y, z) deg2km(distance(w, x, y, z))*1000 < 30, Lat_Rit, Lon_Rit, Stops_Lat_Rit, Stops_Lon_Rit, 'UniformOutput', false);
 Stop_time_rit = cellfun(@(x) sum(x)*Ts, isAtStop_rit, 'UniformOutput', false);
+
+ST_r = cell2mat(Stop_time_rit);
+Mean_ST_rit = mean(ST_r, 1, 'omitnan');

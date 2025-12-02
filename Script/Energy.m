@@ -1,4 +1,4 @@
-function [E_tot, E_mot_out] = Energy (acc_cleaned, velocity, time_gps, time_acc)
+function [E_tot, E_mot_out, p_acc, p_tot] = Energy (acc_cleaned, speed, time_gps, time_acc)
 %time_gps = Position.Timestamp; --> dati presi dal gps
 %time_acc = Acceleration.Timestamp; --> dati presi dall'accelerometro
 
@@ -6,7 +6,7 @@ function [E_tot, E_mot_out] = Energy (acc_cleaned, velocity, time_gps, time_acc)
 a = acc_cleaned;
 % a_pos = a; 
 m = 20e3;
-v = velocity;
+v = speed;
 
 t_s = seconds(time_acc - time_acc(1));
 g = 9.80665; % accelerazione di gravità
@@ -56,7 +56,7 @@ p_reg = p_mot_raw;
 p_reg(p_mot_raw>=0) = 0;
 p_reg(p_mot_raw<0) = p_mot_raw(p_mot_raw<0)*S;
 % figure
-% plot(time_acc, p_acc);
+%plot(time_acc, p_acc);
 % grid on;
 % title('d/dt Ec');
 
