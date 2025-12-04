@@ -45,4 +45,8 @@ plot(time_acc, a_mmean);
 title('accelerazione grezza + media mobile')
 grid on
 grid minor
-
+%%
+v = D_and.Position.speed(1);
+a = D_and.Acceleration.
+v_interp = interp1(time_gps, v, time_acc, 'linear', 'extrap');
+p_acc = m *a .*v_interp;

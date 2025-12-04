@@ -20,6 +20,8 @@ Ts = 1; %Periodo di campionamento del log
 %% ANDATA
  E_tot_a = NaN(size(D_and,1), 1); %con rigenerazione
  E_no_regen_a = NaN(size(D_and,1), 1); %senza rigenerazione
+ p_acc_a = cell(numel(D_and),1); % vettori potenza solo v*a
+ p_tot_a = cell(numel(D_and),1); % vettori potenza totale
 %% data for plots
 
 for i=1:size(D_and,1)
@@ -59,19 +61,24 @@ for i=1:size(D_and,1)
     b = ones(1, N) / N;
     a = 1;
     a_filt = filtfilt(b, a, acc); %media mobile senza introduzione di ritardo
+
+    
     %% richiamo energy
-    [E_tot_a(i), E_no_regen_a(i)] = Energy(a_filt, speed, time_GPS, time_acc); %in kWh
+    [E_tot_a(i), E_no_regen_a(i), p_acc_a{i}, p_tot_a{i}] = Energy(a_filt, speed, time_GPS, time_acc); %in kWh
 end
 
 %% RITORNO
 E_tot_r = NaN(size(D_rit,1), 1); %con rigenerazione
 E_no_regen_r = NaN(size(D_rit,1), 1); %senza rigenerazione
+p_acc_r = cell(numel(D_rit),1); % vettori potenza solo v*a
+p_tot_r = cell(numel(D_rit),1); % vettori potenza totale
+
 for i=1:size(D_and,1)
 
-    time_acc = D_and(i).Acceleration.Timestamp;
-    time_GPS = D_and(i).Position.Timestamp;
-    speed = D_and(i).Position.speed;
-    acc = D_and(i).Acceleration.Y;
+    time_acc = D_rit(i).Acceleration.Timestamp;
+    time_GPS = D_rit(i).Position.Timestamp;
+    speed = D_rit(i).Position.speed;
+    acc = D_rit(i).Acceleration.Y;
     acc = acc - mean(acc);
 
     %% accelerometro
@@ -117,7 +124,7 @@ for i=1:size(D_and,1)
     f_GPS = (0:N-1)*(fs_GPS/N);
     
     %% richiamo energy
-    [E_tot_r(i), E_no_regen_r(i)] = Energy(a_filt, speed, time_GPS, time_acc); %in kWh
+    [E_tot_r(i), E_no_regen_r(i), p_acc_r{i}, p_tot_r{i}] = Energy(a_filt, speed, time_GPS, time_acc); %in kWh
 end
 
 %% Calcolo tempi medi di fermata per ogni fermata

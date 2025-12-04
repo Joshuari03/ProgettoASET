@@ -1,5 +1,27 @@
 %% prima parte dove ricaviamo un vettore tempi di fermate
+clc
+tot_ST_and = sum(Mean_ST_and);
+tot_ST_rit = sum(Mean_ST_rit);
 
+d   = 0.17;          % 170 mm air‑gap (nominal)
+Ptx = 100e3;          % 100 kW
+mis = 0;              % perfect alignment
+
+Prx = polyphase_wpt_model(d,Ptx,mis) / 1e3;
+fprintf('Delivered power (nominal) = %.1f kW\n',Prx);
+
+Recharged_energy_and = Prx * tot_ST_and / 3600;
+fprintf('Recharged energy (outbund) (nominal) = %.1f kWh\n',Recharged_energy_and);
+Recharged_energy_rit = Prx * tot_ST_rit / 3600;
+fprintf('Recharged energy (return) (nominal) = %.1f kWh\n',Recharged_energy_rit);
+
+E_mean_and = mean(E_tot_a);
+fprintf('Avg consumption (outbund) = %.1f kWh\n',E_mean_and);
+E_mean_rit = mean(E_tot_r);
+fprintf('Avg consumption (return) = %.1f kWh\n',E_mean_rit);
+
+fprintf('Recharged energy (outbund) (nominal) in percentage based on the avg consumption = %.1f %%\n',Recharged_energy_and / E_mean_and *100);
+fprintf('Recharged energy (return) (nominal) in percentage based on the avg consumption = %.1f %%\n',Recharged_energy_rit / E_mean_rit *100);
 %%
 clear
 clc
