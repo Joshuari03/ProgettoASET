@@ -1,8 +1,5 @@
 %% prima parte dove ricaviamo un vettore tempi di fermate
-clearvars
-close all
 clc
-run("DataElaboration.m")
 tot_ST_and = sum(Mean_ST_and);
 tot_ST_rit = sum(Mean_ST_rit);
 
@@ -34,15 +31,12 @@ Recharged_E_per_stop_rit_percentage = Recharged_E_per_stop_rit / E_mean_rit * 10
 
 figure
 bar(Recharged_E_per_stop_and_percentage);
-title('Energia ricaricata per fermata in relazione al consumo medio per tutta la tratta di andata')
-xlabel('Fermate');
-ylabel('Energia ricaricata (%)');
 figure
 bar(Recharged_E_per_stop_rit_percentage);
-title('Energia ricaricata per fermata in relazione al consumo medio per tutta la tratta di ritorno')
-xlabel('Fermate');
-ylabel('Energia ricaricata (%)');
 %%
+clear
+clc
+close all
 %% Condizioni nominali
 d   = 0.17;          % 170 mm air‑gap (nominal)
 Ptx = 300e3;          % 100 kW

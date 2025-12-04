@@ -136,10 +136,10 @@ end
 %% Calcolo tempi medi di fermata per ogni fermata
 %ANDATA
 %Creo le matrici che servono per calcolare la distanza di tutte le possibili coppie coordinata_corrente - coordinata_fermata
-[Lat_And, Stops_Lat_And] = arrayfun(@(x) ndgrid(x.Position.latitude(x.Position.speed < 0.7), stops_lat_and), D_and, 'UniformOutput', false);
-[Lon_And, Stops_Lon_And] = arrayfun(@(x) ndgrid(x.Position.longitude(x.Position.speed < 0.7), stops_long_and), D_and, 'UniformOutput', false);
+[Lat_And, Stops_Lat_And] = arrayfun(@(x) ndgrid(x.Position.latitude(x.Position.speed < 0.6), stops_lat_and), D_and, 'UniformOutput', false);
+[Lon_And, Stops_Lon_And] = arrayfun(@(x) ndgrid(x.Position.longitude(x.Position.speed < 0.6), stops_long_and), D_and, 'UniformOutput', false);
 
-isAtStop_and = cellfun(@(w, x, y, z) deg2km(distance(w, x, y, z))*1000 < 30, Lat_And, Lon_And, Stops_Lat_And, Stops_Lon_And,'UniformOutput', false);
+isAtStop_and = cellfun(@(w, x, y, z) deg2km(distance(w, x, y, z))*1000 < 15, Lat_And, Lon_And, Stops_Lat_And, Stops_Lon_And,'UniformOutput', false);
 %Crea una matrice: ogni colonna corrisponde a una fermata, ogni riga è un campione del GPS. Un elemento di una colonna è 1 se la distanza di quel
 %campione dalla fermata corrispondente alla colonna è < 30m e la velocità è < 0.7 m/s
 
@@ -149,11 +149,12 @@ ST_a = cell2mat(Stop_time_and);
 Mean_ST_and = mean(ST_a, 1, 'omitnan'); %Calcola il tempo medio di fermata per ogni fermata
 
 %RITORNO
-[Lat_Rit, Stops_Lat_Rit] = arrayfun(@(x) ndgrid(x.Position.latitude(x.Position.speed < 0.7), stops_lat_rit), D_rit, 'UniformOutput', false);
-[Lon_Rit, Stops_Lon_Rit] = arrayfun(@(x) ndgrid(x.Position.longitude(x.Position.speed < 0.7), stops_long_rit), D_rit, 'UniformOutput', false);
+[Lat_Rit, Stops_Lat_Rit] = arrayfun(@(x) ndgrid(x.Position.latitude(x.Position.speed < 0.6), stops_lat_rit), D_rit, 'UniformOutput', false);
+[Lon_Rit, Stops_Lon_Rit] = arrayfun(@(x) ndgrid(x.Position.longitude(x.Position.speed < 0.6), stops_long_rit), D_rit, 'UniformOutput', false);
 
-isAtStop_rit = cellfun(@(w, x, y, z) deg2km(distance(w, x, y, z))*1000 < 30, Lat_Rit, Lon_Rit, Stops_Lat_Rit, Stops_Lon_Rit, 'UniformOutput', false);
+isAtStop_rit = cellfun(@(w, x, y, z) deg2km(distance(w, x, y, z))*1000 < 15, Lat_Rit, Lon_Rit, Stops_Lat_Rit, Stops_Lon_Rit, 'UniformOutput', false);
 Stop_time_rit = cellfun(@(x) sum(x)*Ts, isAtStop_rit, 'UniformOutput', false);
 
 ST_r = cell2mat(Stop_time_rit);
+ST_r(:,27) = 0; % perche a volte stoppiamo subito e a volte no
 Mean_ST_rit = mean(ST_r, 1, 'omitnan');
