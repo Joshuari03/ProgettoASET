@@ -4,12 +4,18 @@ clearvars
 D_and =[load("Miki_973_A_1.mat");
     load("MS_973_A_2.mat");
     load("FA_973_A_2.mat");
-    load("JO_973_A_2.mat")];
+    load("JO_973_A_2.mat");
+    load("MS_973_A_3.mat");
+    load("FA_973_A_3.mat");
+    load("JO_973_A_3.mat")];
 
 D_rit = [load("FA_973_R_1.mat");
     load("MS_973_R_2.mat");
     load("FA_973_R_2.mat");
-    load("JO_973_R_2.mat")];
+    load("JO_973_R_2.mat")
+    load("MS_973_R_3.mat");
+    load("FA_973_R_3.mat");
+    load("JO_973_R_3.mat")];
 
 load("Fermate_973.mat");
 
