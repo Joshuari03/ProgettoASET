@@ -128,7 +128,7 @@ end
 
 isAtStop_and = cellfun(@(w, x, y, z) deg2km(distance(w, x, y, z))*1000 < 30, Lat_And, Lon_And, Stops_Lat_And, Stops_Lon_And,'UniformOutput', false);
 %Crea una matrice: ogni colonna corrisponde a una fermata, ogni riga è un campione del GPS. Un elemento di una colonna è 1 se la distanza di quel
-%campione dalla fermata corrispondente alla colonna è < 30m e la velocità è< 0.7 m/s
+%campione dalla fermata corrispondente alla colonna è < 30m e la velocità è < 0.7 m/s
 
 Stop_time_and = cellfun(@(x) sum(x)*Ts, isAtStop_and, 'UniformOutput',false); 
 
