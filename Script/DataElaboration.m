@@ -1,3 +1,6 @@
+tic
+folderPath = '/home/joshuarizzello/Documents/Repos/ProgettoASET';
+addpath(genpath(folderPath))
 %% Pulizia variabili e caricamento dati
 clearvars
 %<<<<<<< Updated upstream
@@ -158,3 +161,13 @@ Stop_time_rit = cellfun(@(x) sum(x)*Ts, isAtStop_rit, 'UniformOutput', false);
 ST_r = cell2mat(Stop_time_rit);
 ST_r(:,27) = 0; % perche a volte stoppiamo subito e a volte no
 Mean_ST_rit = mean(ST_r, 1, 'omitnan');
+
+
+%% Dobbiamo calcolare le distanze totali di ogni log per ottenere il consumo per km ! Le run segmentate se si spegne il telefono sono problematiche per il calcolo dell'energia
+total_distance = 0;
+for i = 2:length(lat)
+    total_distance = total_distance + distance(Lat_Rit(i-1), lon(i-1), lat(i), lon(i), referenceSphere('Earth')) * 1000; % km -> m
+end
+
+
+toc

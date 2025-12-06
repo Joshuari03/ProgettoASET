@@ -1,3 +1,5 @@
+folderPath = '/home/joshuarizzello/Documents/Repos/ProgettoASET';
+addpath(genpath(folderPath))
 %% prima parte dove ricaviamo un vettore tempi di fermate
 clearvars
 close all
