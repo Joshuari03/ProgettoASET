@@ -4,21 +4,16 @@ addpath(genpath(folderPath))
 %% Pulizia variabili e caricamento dati
 clearvars
 %<<<<<<< Updated upstream
-D_and =[load("Miki_973_A_1.mat");
-    load("MS_973_A_2.mat");
-    load("FA_973_A_2.mat");
-    load("JO_973_A_2.mat");
-    load("MS_973_A_3.mat");
-    load("FA_973_A_3.mat");
-    load("JO_973_A_3.mat")];
+D_and = [load("FA_973_A_2.mat");
+         load("JO_973_A_2.mat");
+         load("FA_973_A_3.mat");
+         load("JO_973_A_3.mat")];
 
-D_rit = [load("FA_973_R_1.mat");
-    load("MS_973_R_2.mat");
-    load("FA_973_R_2.mat");
-    load("JO_973_R_2.mat")
-    load("MS_973_R_3.mat");
-    load("FA_973_R_3.mat");
-    load("JO_973_R_3.mat")];
+D_rit = [load("MS_973_R_2.mat");
+         load("FA_973_R_2.mat");
+         load("JO_973_R_2.mat");
+         load("FA_973_R_3.mat");
+         load("JO_973_R_3.mat")];
 
 load("Fermate_973.mat");
 
@@ -178,12 +173,14 @@ total_distance_rit = zeros(size(D_rit,1),1);
 for pp=1:size(D_rit,1)
     Lat = D_rit(pp).Position.latitude;
     Lon = D_rit(pp).Position.longitude;
-for i = 2:length(Lat)
-    total_distance_rit(pp) = total_distance_rit(pp) + deg2km(distance(Lat(i-1), Lon(i-1), Lat(i), Lon(i)));
-end
-E_tot_per_km_rit(pp) = E_tot_r(pp) / total_distance_rit(pp);
+    for i = 2:length(Lat)
+        total_distance_rit(pp) = total_distance_rit(pp) + deg2km(distance(Lat(i-1), Lon(i-1), Lat(i), Lon(i)));
+    end
+    E_tot_per_km_rit(pp) = E_tot_r(pp) / total_distance_rit(pp);
 end
 
 E_tot_per_km = [E_tot_per_km_and, E_tot_per_km_rit];
-E_tot_per_km_avg = me
+E_tot_per_km_avg = mean(E_tot_per_km);
+
+
 toc

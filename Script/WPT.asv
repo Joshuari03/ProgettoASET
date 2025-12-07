@@ -1,18 +1,26 @@
+folderPath = '/home/joshuarizzello/Documents/Repos/ProgettoASET';
+addpath(genpath(folderPath))
 %% prima parte dove ricaviamo un vettore tempi di fermate
+clearvars
+close all
 clc
+run("DataElaboration.m")
 tot_ST_and = sum(Mean_ST_and);
 tot_ST_rit = sum(Mean_ST_rit);
 
 d   = 0.17;          % 170 mm air‑gap (nominal)
-Ptx = 100e3;          % 100 kW
-mis = 0;              % perfect alignment
+Ptx = 100e3;         % 100 kW
+mis = 0;             % perfect alignment
+E_battery = 300;     % 300 kWh di capacità
 
 Prx = polyphase_wpt_model(d,Ptx,mis) / 1e3;
 fprintf('Delivered power (nominal) = %.1f kW\n',Prx);
 
 Recharged_energy_and = Prx * tot_ST_and / 3600;
+Recharged_energy_and_percent = Recharged_energy_and / E_battery * 100;
 fprintf('Recharged energy (outbund) (nominal) = %.1f kWh\n',Recharged_energy_and);
 Recharged_energy_rit = Prx * tot_ST_rit / 3600;
+Recharged_energy_rit_percent = Recharged_energy_rit / E_battery * 100;
 fprintf('Recharged energy (return) (nominal) = %.1f kWh\n',Recharged_energy_rit);
 
 E_mean_and = mean(E_tot_a);
@@ -31,12 +39,15 @@ Recharged_E_per_stop_rit_percentage = Recharged_E_per_stop_rit / E_mean_rit * 10
 
 figure
 bar(Recharged_E_per_stop_and_percentage);
+title('Energia ricaricata per fermata in relazione al consumo medio per tutta la tratta di andata')
+xlabel('Fermate');
+ylabel('Energia ricaricata (%)');
 figure
 bar(Recharged_E_per_stop_rit_percentage);
+title('Energia ricaricata per fermata in relazione al consumo medio per tutta la tratta di ritorno')
+xlabel('Fermate');
+ylabel('Energia ricaricata (%)');
 %%
-clear
-clc
-close all
 %% Condizioni nominali
 d   = 0.17;          % 170 mm air‑gap (nominal)
 Ptx = 300e3;          % 100 kW

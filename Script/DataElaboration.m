@@ -4,21 +4,16 @@ addpath(genpath(folderPath))
 %% Pulizia variabili e caricamento dati
 clearvars
 %<<<<<<< Updated upstream
-D_and =[load("Miki_973_A_1.mat");
-    load("MS_973_A_2.mat");
-    load("FA_973_A_2.mat");
-    load("JO_973_A_2.mat");
-    load("MS_973_A_3.mat");
-    load("FA_973_A_3.mat");
-    load("JO_973_A_3.mat")];
+D_and = [load("FA_973_A_2.mat");
+         load("JO_973_A_2.mat");
+         load("FA_973_A_3.mat");
+         load("JO_973_A_3.mat")];
 
-D_rit = [load("FA_973_R_1.mat");
-    load("MS_973_R_2.mat");
-    load("FA_973_R_2.mat");
-    load("JO_973_R_2.mat")
-    load("MS_973_R_3.mat");
-    load("FA_973_R_3.mat");
-    load("JO_973_R_3.mat")];
+D_rit = [load("MS_973_R_2.mat");
+         load("FA_973_R_2.mat");
+         load("JO_973_R_2.mat");
+         load("FA_973_R_3.mat");
+         load("JO_973_R_3.mat")];
 
 load("Fermate_973.mat");
 
@@ -82,7 +77,7 @@ E_no_regen_r = NaN(size(D_rit,1), 1); %senza rigenerazione
 p_acc_r = cell(numel(D_rit),1); % vettori potenza solo v*a
 p_tot_r = cell(numel(D_rit),1); % vettori potenza totale
 
-for i=1:size(D_and,1)
+for i=1:size(D_rit,1)
 
     time_acc = D_rit(i).Acceleration.Timestamp;
     time_GPS = D_rit(i).Position.Timestamp;
@@ -168,22 +163,24 @@ total_distance_and = zeros(size(D_and,1),1);
 for pp=1:size(D_and,1)
     Lat = D_and(pp).Position.latitude;
     Lon = D_and(pp).Position.longitude;
-for i = 2:length(Lat)
-    total_distance_and(pp) = total_distance_and(pp) + deg2km(distance(Lat(i-1), Lon(i-1), Lat(i), Lon(i)));
-end
-E_tot_per_km_and(pp) = E_tot_a(pp) / total_distance_and(pp);
+    for i = 2:length(Lat)
+        total_distance_and(pp) = total_distance_and(pp) + deg2km(distance(Lat(i-1), Lon(i-1), Lat(i), Lon(i)));
+    end
+    E_tot_per_km_and(pp) = E_tot_a(pp) / total_distance_and(pp);
 end
 
 total_distance_rit = zeros(size(D_rit,1),1);
 for pp=1:size(D_rit,1)
     Lat = D_rit(pp).Position.latitude;
     Lon = D_rit(pp).Position.longitude;
-for i = 2:length(Lat)
-    total_distance_rit(pp) = total_distance_rit(pp) + deg2km(distance(Lat(i-1), Lon(i-1), Lat(i), Lon(i)));
-end
-E_tot_per_km_rit(pp) = E_tot_r(pp) / total_distance_rit(pp);
+    for i = 2:length(Lat)
+        total_distance_rit(pp) = total_distance_rit(pp) + deg2km(distance(Lat(i-1), Lon(i-1), Lat(i), Lon(i)));
+    end
+    E_tot_per_km_rit(pp) = E_tot_r(pp) / total_distance_rit(pp);
 end
 
 E_tot_per_km = [E_tot_per_km_and, E_tot_per_km_rit];
 E_tot_per_km_avg = mean(E_tot_per_km);
+
+
 toc
