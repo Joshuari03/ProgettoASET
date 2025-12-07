@@ -185,5 +185,5 @@ E_tot_per_km_rit(pp) = E_tot_r(pp) / total_distance_rit(pp);
 end
 
 E_tot_per_km = [E_tot_per_km_and, E_tot_per_km_rit];
-E_tot_per_km_avg = mean(E_tot_per_km);
+E_tot_per_km_avg = me
 toc
