@@ -9,8 +9,8 @@ tot_ST_and = sum(Mean_ST_and);
 tot_ST_rit = sum(Mean_ST_rit);
 
 d   = 0.17;          % 170 mm air‑gap (nominal)
-Ptx = 100e3;         % 100 kW
-mis = 0;             % perfect alignment
+Ptx = 150e3;         % 100 kW
+mis = 0.05;             % perfect alignment
 E_battery = 300;     % 300 kWh di capacità
 
 Prx = polyphase_wpt_model(d,Ptx,mis) / 1e3;
