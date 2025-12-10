@@ -39,16 +39,29 @@ Recharged_E_per_stop_rit = Prx * Mean_ST_rit / 3600;
 Recharged_E_per_stop_and_percentage = Recharged_E_per_stop_and / E_mean_and * 100;
 Recharged_E_per_stop_rit_percentage = Recharged_E_per_stop_rit / E_mean_rit * 100;
 
+fprintf('Recharged energy (outbund) (nominal) in percentage without end of the line stop = %.1f %%\n',sum(Recharged_E_per_stop_and_percentage(2:end)));
+fprintf('Recharged energy (return) (nominal) in percentage without end of the line stop = %.1f %%\n',sum(Recharged_E_per_stop_rit_percentage(2:end)));
+
 figure
 bar(Recharged_E_per_stop_and_percentage);
 title('Energia ricaricata per fermata in relazione al consumo medio per tutta la tratta di andata')
 xlabel('Fermate');
 ylabel('Energia ricaricata (%)');
 figure
-bar(Recharged_E_per_stop_rit_percentage);
-title('Energia ricaricata per fermata in relazione al consumo medio per tutta la tratta di ritorno')
+bar(Recharged_E_per_stop_rit_percentage);title('Energia ricaricata per fermata in relazione al consumo medio per tutta la tratta di ritorno')
 xlabel('Fermate');
 ylabel('Energia ricaricata (%)');
+
+figure
+bar(Mean_ST_and(1:end))
+title("tempi di feramata")
+xlabel("fermate")
+ylabel("secondi fermata")
+figure
+bar(Mean_ST_rit(1:end))
+title("tempi di feramata")
+xlabel("fermate")
+ylabel("secondi fermata")
 %%
 %% Condizioni nominali
 d   = 0.17;          % 170 mm air‑gap (nominal)
