@@ -9,19 +9,18 @@ tot_ST_and = sum(Mean_ST_and);
 tot_ST_rit = sum(Mean_ST_rit);
 
 d   = 0.17;          % 170 mm air‑gap (nominal)
-Ptx = 100e3;         % 100 kW
+Ptx = 150e3;         % 100 kW
 mis = 0.05;          % perfect alignment
 E_battery = 300;     % 300 kWh di capacità
 
 Prx = polyphase_wpt_model(d,Ptx,mis) / 1e3;
 fprintf('Delivered power (nominal) = %.1f kW\n',Prx);
 
-Recharged_energy_and = Prx * tot_ST_and / 3600;
-% Recharged_energy_and = Prx * Mean_ST_and(1) / 3600;
+% Recharged_energy_and = Prx * tot_ST_and / 3600;
+Recharged_energy_and = Prx * Mean_ST_and() / 3600;
 Recharged_energy_and_percent = Recharged_energy_and / E_battery * 100;
 fprintf('Recharged energy (outbund) (nominal) = %.1f kWh, Percentage = %.1f %%\n', Recharged_energy_and, Recharged_energy_and_percent);
 Recharged_energy_rit = Prx * tot_ST_rit / 3600;
-% Recharged_energy_rit = Prx * Mean_ST_rit(1) / 3600;
 Recharged_energy_rit_percent = Recharged_energy_rit / E_battery * 100;
 fprintf('Recharged energy (return) (nominal) = %.1f kWh, Percentage = %.1f %%\n', Recharged_energy_rit, Recharged_energy_rit_percent);
 
@@ -56,12 +55,12 @@ ylabel('Energia ricaricata (%)');
 
 figure
 bar(Mean_ST_and(1:end))
-title("tempi di feramata andata")
+title("tempi di feramata")
 xlabel("fermate")
 ylabel("secondi fermata")
 figure
 bar(Mean_ST_rit(1:end))
-title("tempi di feramata ritorno")
+title("tempi di feramata")
 xlabel("fermate")
 ylabel("secondi fermata")
 %%
