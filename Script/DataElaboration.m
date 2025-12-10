@@ -1,6 +1,6 @@
 tic
-folderPath = '/home/joshuarizzello/Documents/Repos/ProgettoASET';
-addpath(genpath(folderPath))
+% folderPath = '/home/joshuarizzello/Documents/Repos/ProgettoASET';
+% addpath(genpath(folderPath))
 %% Pulizia variabili e caricamento dati
 clearvars
 %<<<<<<< Updated upstream
@@ -8,13 +8,17 @@ D_and = [load("FA_973_A_2.mat");
 
          load("FA_973_A_3.mat");
 
-         load("JO_973_A_4.mat")];
+         load("JO_973_A_4.mat");
+         
+         load("MS_973_A_4.mat")];
 
 D_rit = [load("JO_973_R_2.mat");
 
          load("JO_973_R_3.mat");
          
-         load("JO_973_R_4.mat")];
+         load("JO_973_R_4.mat");
+
+         load("MS_973_R_4.mat")];
 
 load("Fermate_973.mat");
 
@@ -158,33 +162,31 @@ Stop_time_rit = cellfun(@(x) sum(x)*Ts, isAtStop_rit, 'UniformOutput', false);
 
 ST_r = cell2mat(Stop_time_rit);
 ST_r(1,1) = 715;
-ST_r(:,27) = 0; % perche a volte stoppiamo subito e a volte no
+ST_r(:,27) = 0; % perché a volte stoppiamo subito e a volte no
 Mean_ST_rit = mean(ST_r, 1, 'omitnan');
 
 
 %% Dobbiamo calcolare le distanze totali di ogni log per ottenere il consumo per km ! Le run segmentate se si spegne il telefono sono problematiche per il calcolo dell'energia
 total_distance_and = zeros(size(D_and,1),1);
+E_tot_per_km_and = zeros(1,size(D_and,1));
 for pp=1:size(D_and,1)
     Lat = D_and(pp).Position.latitude;
     Lon = D_and(pp).Position.longitude;
-    for i = 2:length(Lat)
-        total_distance_and(pp) = total_distance_and(pp) + deg2km(distance(Lat(i-1), Lon(i-1), Lat(i), Lon(i)));
-    end
+    total_distance_and(pp) = sum(deg2km(distance(Lat(1:end-1), Lon(1:end-1), Lat(2:end), Lon(2:end))));
     E_tot_per_km_and(pp) = E_tot_a(pp) / total_distance_and(pp);
 end
 
 total_distance_rit = zeros(size(D_rit,1),1);
+E_tot_per_km_rit = zeros(1,size(D_and,1));
 for pp=1:size(D_rit,1)
     Lat = D_rit(pp).Position.latitude;
     Lon = D_rit(pp).Position.longitude;
-    for i = 2:length(Lat)
-        total_distance_rit(pp) = total_distance_rit(pp) + deg2km(distance(Lat(i-1), Lon(i-1), Lat(i), Lon(i)));
-    end
+    total_distance_rit(pp) =sum(deg2km(distance(Lat(1:end-1), Lon(1:end-1), Lat(2:end), Lon(2:end))));
     E_tot_per_km_rit(pp) = E_tot_r(pp) / total_distance_rit(pp);
 end
 
 E_tot_per_km = [E_tot_per_km_and, E_tot_per_km_rit];
-E_tot_per_km_avg = mean(E_tot_per_km);
+E_tot_per_km_avg = mean(E_tot_per_km); %kWh
 
 
 toc
