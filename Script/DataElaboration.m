@@ -12,7 +12,9 @@ D_and = [load("FA_973_A_2.mat");
          
          load("MS_973_A_5.mat");
          
-         load("FA_973_A_6.mat")];
+         load("FA_973_A_6.mat");
+         
+         load("FA_973_A_7.mat")];
 
 D_rit = [load("JO_973_R_2.mat");
 
@@ -22,7 +24,9 @@ D_rit = [load("JO_973_R_2.mat");
 
          load("MS_973_R_5.mat");
          
-         load("FA_973_R_6.mat")];
+         load("FA_973_R_6.mat");
+         
+         load("FA_973_R_7.mat")];
 
 load("Fermate_973.mat");
 

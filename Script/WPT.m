@@ -16,12 +16,12 @@ E_battery = 300;     % 300 kWh di capacità
 Prx = polyphase_wpt_model(d,Ptx,mis) / 1e3;
 fprintf('Delivered power (nominal) = %.1f kW\n',Prx);
 
-Recharged_energy_and = Prx * tot_ST_and / 3600;
-% Recharged_energy_and = Prx * Mean_ST_and(1) / 3600;
+%Recharged_energy_and = Prx * tot_ST_and / 3600;
+Recharged_energy_and = Prx * (Mean_ST_rit(1) + 180)/ 3600;
 Recharged_energy_and_percent = Recharged_energy_and / E_battery * 100;
 fprintf('Recharged energy (outbund) (nominal) = %.1f kWh, Percentage = %.1f %%\n', Recharged_energy_and, Recharged_energy_and_percent);
-Recharged_energy_rit = Prx * tot_ST_rit / 3600;
-% Recharged_energy_rit = Prx * Mean_ST_rit(1) / 3600;
+% Recharged_energy_rit = Prx * tot_ST_rit / 3600;
+Recharged_energy_rit = Prx * Mean_ST_rit(1) / 3600;
 Recharged_energy_rit_percent = Recharged_energy_rit / E_battery * 100;
 fprintf('Recharged energy (return) (nominal) = %.1f kWh, Percentage = %.1f %%\n', Recharged_energy_rit, Recharged_energy_rit_percent);
 
@@ -34,6 +34,7 @@ fprintf('Avg consumption (return) = %.1f kWh, Percentage = %.1f %%\n',E_mean_rit
 
 fprintf('Recharged energy (outbund) (nominal) in percentage based on the avg consumption = %.1f %%\n',Recharged_energy_and / E_mean_and *100);
 fprintf('Recharged energy (return) (nominal) in percentage based on the avg consumption = %.1f %%\n',Recharged_energy_rit / E_mean_rit *100);
+fprintf('Total recharged energy in percentage based on the avg consumption = %.1f %%\n',Recharged_energy_and / E_mean_and *100 + Recharged_energy_rit / E_mean_rit *100);
 
 Recharged_E_per_stop_and = Prx * Mean_ST_and / 3600;
 Recharged_E_per_stop_rit = Prx * Mean_ST_rit / 3600;

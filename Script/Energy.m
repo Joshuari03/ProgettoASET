@@ -6,7 +6,7 @@ function [E_tot, E_mot_out, p_acc, p_tot] = Energy (acc_cleaned, speed, time_gps
 a = acc_cleaned;
 % a_pos = a; 
 m_veicolo = 13e3;
-m_persone = 70 * 100; %
+m_persone = 70 * 40; %
 m = m_veicolo + m_persone;
 v = speed;
 
