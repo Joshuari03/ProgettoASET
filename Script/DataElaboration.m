@@ -51,29 +51,6 @@ for i=1:size(D_and,1)
 
     %% accelerometro
 
-    % A = fft(acc);
-
-    % fs_acc = 20; %deciso da noi durante la raccolta dati
-    % N = length(abs(A));
-    % f_acc = (0:N-1)*(fs_acc/N);
-    % 
-    % if mod(length(A),2)==0
-    %     half_len = (length(A))/2;
-    % elseif mod(length(A),2)~=0
-    %     half_len = (length(A)+1)/2;
-    % end
-    % A_half = A(1:half_len);
-    % f_cut = 2;
-    % A_half(round(f_cut * length(A_half)/ fs_acc):end) = 0;
-    % 
-    % if mod(length(A),2)==0
-    %     A_rec = [A_half; 0; conj(A_half(end:-1:2))];
-    % elseif mod(length(A),2)~=0
-    %     A_rec = [A_half; conj(A_half(end:-1:2))];
-    % end
-    % 
-    % a_cleaned = ifft ((A_rec));
-     
     N = 10;
     b = ones(1, N) / N;
     a = 1;
