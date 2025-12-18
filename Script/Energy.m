@@ -13,7 +13,7 @@ t_s = seconds(time_acc - time_acc(1));
 g = 9.80665; % accelerazione di gravità
 Crr = 0.008; % coefficiente di attrito ruota strada
 rho = 1.225; % coefficiente attrito dell'aria
-CdA = 8; % area frontale bus per attrito aero
+CdA = 0.5*5.69; % area frontale bus per attrito aero
 eta = 0.8; % efficienza trasmissione tra batteria e ruote
 S = 0.4; %split factor tra freno meccanico e rigenerazione, parametro trovato su tesi
 
