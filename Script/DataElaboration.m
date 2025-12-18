@@ -100,29 +100,6 @@ for i=1:size(D_rit,1)
 
     %% accelerometro
 
-    % A = fft(acc);
-    % 
-    % fs_acc = 20; %deciso da noi durante la raccolta dati
-    % N = length(abs(A));
-    % f_acc = (0:N-1)*(fs_acc/N);
-    % 
-    % if mod(length(A),2)==0
-    %     half_len = (length(A))/2;
-    % elseif mod(length(A),2)~=0
-    %     half_len = (length(A)+1)/2;
-    % end
-    % A_half = A(1:half_len);
-    % f_cut = 2;
-    % A_half(round(f_cut * length(A_half)/ fs_acc):end) = 0;
-    % 
-    % if mod(length(A),2)==0
-    %     A_rec = [A_half; 0; conj(A_half(end:-1:2))];
-    % elseif mod(length(A),2)~=0
-    %     A_rec = [A_half; conj(A_half(end:-1:2))];
-    % end
-    % 
-    % a_cleaned = ifft ((A_rec));
-   
     N = 10;
     b = ones(1, N) / N;
     a = 1;
@@ -158,6 +135,7 @@ isAtStop_and = cellfun(@(w, x, y, z) deg2km(distance(w, x, y, z))*1000 < positio
 Stop_time_and = cellfun(@(x) sum(x)*Ts, isAtStop_and, 'UniformOutput',false); 
 
 ST_a = cell2mat(Stop_time_and);
+ST_a(:, end) = 0;
 Mean_ST_and = mean(ST_a, 1, 'omitnan'); %Calcola il tempo medio di fermata per ogni fermata
 
 %RITORNO
@@ -168,8 +146,7 @@ isAtStop_rit = cellfun(@(w, x, y, z) deg2km(distance(w, x, y, z))*1000 < positio
 Stop_time_rit = cellfun(@(x) sum(x)*Ts, isAtStop_rit, 'UniformOutput', false);
 
 ST_r = cell2mat(Stop_time_rit);
-ST_r(1,1) = 715;
-ST_r(:,27) = 0; % perché a volte stoppiamo subito e a volte no
+ST_r(:, end) = 0; % perché a volte stoppiamo subito e a volte no
 Mean_ST_rit = mean(ST_r, 1, 'omitnan');
 
 
