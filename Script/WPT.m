@@ -1,5 +1,5 @@
-folderPath = '/home/joshuarizzello/Documents/Repos/ProgettoASET';
-addpath(genpath(folderPath))
+% folderPath = '/home/joshuarizzello/Documents/Repos/ProgettoASET';
+% addpath(genpath(folderPath))
 %% prima parte dove ricaviamo un vettore tempi di fermate
 clearvars
 close all
@@ -17,11 +17,20 @@ Prx = polyphase_wpt_model(d,Ptx,mis) / 1e3;
 fprintf('Delivered power (nominal) = %.1f kW\n',Prx);
 
 %Recharged_energy_and = Prx * tot_ST_and / 3600;
-Recharged_energy_and = Prx * (Mean_ST_rit(1) + 180)/ 3600;
+
+WPT_stops_and = false(1, length(Mean_ST_rit));
+WPT_stops_and([1 12]) = true; %indici delle fermate in cui si intende mettere le piattaforme di ricarica 
+% Mean_ST_and(WPT_stops_and) = [180 180]; %ipotizzando di fermarsi 3 min a Piazza 5 giornate e 3 min a Linate
+
+WPT_stops_rit = false(1, length(Mean_ST_rit));
+WPT_stops_rit([1 14]) = true; %indici delle fermate in cui si intende mettere le piattaforme di ricarica 
+% Mean_ST_rit(WPT_stops_rit) = [300 180]; %Ipotizzando di fermarsi 5 min a San Felicino e 3 min a Linate
+
+Recharged_energy_and = Prx * sum(Mean_ST_and(WPT_stops_and))/ 3600;
 Recharged_energy_and_percent = Recharged_energy_and / E_battery * 100;
 fprintf('Recharged energy (outbund) (nominal) = %.1f kWh, Percentage = %.1f %%\n', Recharged_energy_and, Recharged_energy_and_percent);
 % Recharged_energy_rit = Prx * tot_ST_rit / 3600;
-Recharged_energy_rit = Prx * Mean_ST_rit(1) / 3600;
+Recharged_energy_rit = Prx * sum(Mean_ST_rit(WPT_stops_rit)) / 3600;
 Recharged_energy_rit_percent = Recharged_energy_rit / E_battery * 100;
 fprintf('Recharged energy (return) (nominal) = %.1f kWh, Percentage = %.1f %%\n', Recharged_energy_rit, Recharged_energy_rit_percent);
 
@@ -32,18 +41,18 @@ E_mean_rit = mean(E_tot_r);
 E_mean_rit_percent = E_mean_rit / E_battery * 100;
 fprintf('Avg consumption (return) = %.1f kWh, Percentage = %.1f %%\n',E_mean_rit, E_mean_rit_percent);
 
-fprintf('Recharged energy (outbund) (nominal) in percentage based on the avg consumption = %.1f %%\n',Recharged_energy_and / E_mean_and *100);
-fprintf('Recharged energy (return) (nominal) in percentage based on the avg consumption = %.1f %%\n',Recharged_energy_rit / E_mean_rit *100);
-fprintf('Total recharged energy in percentage based on the avg consumption = %.1f %%\n',Recharged_energy_and / E_mean_and *100 + Recharged_energy_rit / E_mean_rit *100);
+fprintf('Recharged energy (outbund) (nominal) in percentage with respect to the avg consumption = %.1f %%\n',Recharged_energy_and / E_mean_and *100);
+fprintf('Recharged energy (return) (nominal) in percentage with respect to the avg consumption = %.1f %%\n',Recharged_energy_rit / E_mean_rit *100);
+fprintf('Total recharged energy in percentage with respect to the avg consumption = %.1f %%\n',Recharged_energy_and / E_mean_and *100 + Recharged_energy_rit / E_mean_rit *100);
 
-Recharged_E_per_stop_and = Prx * Mean_ST_and / 3600;
-Recharged_E_per_stop_rit = Prx * Mean_ST_rit / 3600;
+Recharged_E_per_stop_and = Prx * (Mean_ST_and.*WPT_stops_and) / 3600; %a 0 le fermate in cui non si ricarica
+Recharged_E_per_stop_rit = Prx * (Mean_ST_rit.*WPT_stops_rit) / 3600; %a 0 le fermate in cui non si ricarica
 
 Recharged_E_per_stop_and_percentage = Recharged_E_per_stop_and / E_mean_and * 100;
 Recharged_E_per_stop_rit_percentage = Recharged_E_per_stop_rit / E_mean_rit * 100;
 
-fprintf('Recharged energy (outbund) (nominal) in percentage without end of the line stop = %.1f %%\n',sum(Recharged_E_per_stop_and_percentage(2:end)));
-fprintf('Recharged energy (return) (nominal) in percentage without end of the line stop = %.1f %%\n',sum(Recharged_E_per_stop_rit_percentage(2:end)));
+% fprintf('Recharged energy (outbund) (nominal) in percentage without end of the line stop = %.1f %%\n',sum(Recharged_E_per_stop_and_percentage(2:end)));
+% fprintf('Recharged energy (return) (nominal) in percentage without end of the line stop = %.1f %%\n',sum(Recharged_E_per_stop_rit_percentage(2:end)));
 
 figure
 bar(Recharged_E_per_stop_and_percentage);

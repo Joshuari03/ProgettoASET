@@ -30,8 +30,8 @@ D_rit = [load("JO_973_R_2.mat");
 
 load("Fermate_973.mat");
 
-Ts = 1; %Periodo di campionamento del log
-
+Ts = 1; %Tempo di campionamento del log
+fs = 20; %Frequenza di campionamento dell'IMU
 %<<<<<<< Updated upstream
 %=======
 %% ANDATA
@@ -51,33 +51,33 @@ for i=1:size(D_and,1)
 
     %% accelerometro
 
-    A = fft(acc);
+    % A = fft(acc);
 
-    fs_acc = 20; %deciso da noi durante la raccolta dati
-    N = length(abs(A));
-    f_acc = (0:N-1)*(fs_acc/N);
-
-    if mod(length(A),2)==0
-        half_len = (length(A))/2;
-    elseif mod(length(A),2)~=0
-        half_len = (length(A)+1)/2;
-    end
-    A_half = A(1:half_len);
-    f_cut = 2;
-    A_half(round(f_cut * length(A_half)/ fs_acc):end) = 0;
-
-    if mod(length(A),2)==0
-        A_rec = [A_half; 0; conj(A_half(end:-1:2))];
-    elseif mod(length(A),2)~=0
-        A_rec = [A_half; conj(A_half(end:-1:2))];
-    end
- 
-    a_cleaned = ifft ((A_rec));
-   
+    % fs_acc = 20; %deciso da noi durante la raccolta dati
+    % N = length(abs(A));
+    % f_acc = (0:N-1)*(fs_acc/N);
+    % 
+    % if mod(length(A),2)==0
+    %     half_len = (length(A))/2;
+    % elseif mod(length(A),2)~=0
+    %     half_len = (length(A)+1)/2;
+    % end
+    % A_half = A(1:half_len);
+    % f_cut = 2;
+    % A_half(round(f_cut * length(A_half)/ fs_acc):end) = 0;
+    % 
+    % if mod(length(A),2)==0
+    %     A_rec = [A_half; 0; conj(A_half(end:-1:2))];
+    % elseif mod(length(A),2)~=0
+    %     A_rec = [A_half; conj(A_half(end:-1:2))];
+    % end
+    % 
+    % a_cleaned = ifft ((A_rec));
+     
     N = 10;
     b = ones(1, N) / N;
     a = 1;
-    a_filt = filtfilt(b, a, acc); %media mobile senza introduzione di ritardo
+    a_filt = filtfilt(b, a, acc); %media mobile su 10 campioni senza introduzione di ritardo
 
     
     %% richiamo energy
@@ -101,45 +101,45 @@ for i=1:size(D_rit,1)
 
     %% accelerometro
 
-    A = fft(acc);
-
-    fs_acc = 20; %deciso da noi durante la raccolta dati
-    N = length(abs(A));
-    f_acc = (0:N-1)*(fs_acc/N);
-
-    if mod(length(A),2)==0
-        half_len = (length(A))/2;
-    elseif mod(length(A),2)~=0
-        half_len = (length(A)+1)/2;
-    end
-    A_half = A(1:half_len);
-    f_cut = 2;
-    A_half(round(f_cut * length(A_half)/ fs_acc):end) = 0;
-
-    if mod(length(A),2)==0
-        A_rec = [A_half; 0; conj(A_half(end:-1:2))];
-    elseif mod(length(A),2)~=0
-        A_rec = [A_half; conj(A_half(end:-1:2))];
-    end
- 
-    a_cleaned = ifft ((A_rec));
+    % A = fft(acc);
+    % 
+    % fs_acc = 20; %deciso da noi durante la raccolta dati
+    % N = length(abs(A));
+    % f_acc = (0:N-1)*(fs_acc/N);
+    % 
+    % if mod(length(A),2)==0
+    %     half_len = (length(A))/2;
+    % elseif mod(length(A),2)~=0
+    %     half_len = (length(A)+1)/2;
+    % end
+    % A_half = A(1:half_len);
+    % f_cut = 2;
+    % A_half(round(f_cut * length(A_half)/ fs_acc):end) = 0;
+    % 
+    % if mod(length(A),2)==0
+    %     A_rec = [A_half; 0; conj(A_half(end:-1:2))];
+    % elseif mod(length(A),2)~=0
+    %     A_rec = [A_half; conj(A_half(end:-1:2))];
+    % end
+    % 
+    % a_cleaned = ifft ((A_rec));
    
     N = 10;
     b = ones(1, N) / N;
     a = 1;
-    a_filt = filtfilt(b, a, acc); %media mobile senza introduzione di ritardo
+    a_filt = filtfilt(b, a, acc); %media mobile su 10 campioni senza introduzione di ritardo
     %% derivata velocità
 
-    dt = 1/20; %1 fratto la freq di campionamento
+    dt = 1/fs; %1 fratto la freq di campionamento
     dv = gradient(speed, dt); %derivata della velocità
 
 
     DV = fft(dv);
 
 
-    fs_GPS = 1;
-    N = length(abs(DV));
-    f_GPS = (0:N-1)*(fs_GPS/N);
+    % fs_GPS = 1;
+    % N = length(abs(DV));
+    % f_GPS = (0:N-1)*(fs_GPS/N);
     
     %% richiamo energy
     [E_tot_r(i), E_no_regen_r(i), p_acc_r{i}, p_tot_r{i}] = Energy(a_filt, speed, time_GPS, time_acc); %in 
@@ -150,14 +150,17 @@ end
 speed_treshold = 0.3; % treshold velocità per identificazione punti bus fermo alla fermata
 position_treshold = 15; % treshold posizione per identificazione punti bus fermo alla fermata
 %ANDATA
+<<<<<<< HEAD
 %Creo le matrici che servono per calcolare la diotstanza di tutte le possibili coppie coordinata_corrente - coordinata_fermata
+=======
+%Creazione delle matrici che servono per calcolare la distanza di tutte le possibili coppie coordinata_corrente - coordinata_fermata
+>>>>>>> origin/main
 [Lat_And, Stops_Lat_And] = arrayfun(@(x) ndgrid(x.Position.latitude(x.Position.speed < speed_treshold), stops_lat_and), D_and, 'UniformOutput', false);
 [Lon_And, Stops_Lon_And] = arrayfun(@(x) ndgrid(x.Position.longitude(x.Position.speed < speed_treshold), stops_long_and), D_and, 'UniformOutput', false);
 
 isAtStop_and = cellfun(@(w, x, y, z) deg2km(distance(w, x, y, z))*1000 < position_treshold, Lat_And, Lon_And, Stops_Lat_And, Stops_Lon_And,'UniformOutput', false);
 %Crea una matrice: ogni colonna corrisponde a una fermata, ogni riga è un campione del GPS. Un elemento di una colonna è 1 se la distanza di quel
-%campione dalla fermata corrispondente alla colonna è < 30m e la velocità è < 0.7 m/s
-
+%campione dalla fermata corrispondente alla colonna è < position_treshold e la velocità è < speed_treshold
 Stop_time_and = cellfun(@(x) sum(x)*Ts, isAtStop_and, 'UniformOutput',false); 
 
 ST_a = cell2mat(Stop_time_and);
@@ -176,9 +179,10 @@ ST_r(:,27) = 0; % perché a volte stoppiamo subito e a volte no
 Mean_ST_rit = mean(ST_r, 1, 'omitnan');
 
 
-%% Dobbiamo calcolare le distanze totali di ogni log per ottenere il consumo per km ! Le run segmentate se si spegne il telefono sono problematiche per il calcolo dell'energia
-total_distance_and = zeros(size(D_and,1),1);
-E_tot_per_km_and = zeros(1,size(D_and,1));
+%% Dobbiamo calcolare le distanze totali di ogni log per ottenere il consumo per km
+% Le run segmentate se si spegne il telefono sono problematiche per il calcolo dell'energia
+total_distance_and = zeros(size(D_and,1), 1);
+E_tot_per_km_and = zeros(size(D_and,1), 1);
 for pp=1:size(D_and,1)
     Lat = D_and(pp).Position.latitude;
     Lon = D_and(pp).Position.longitude;
@@ -186,8 +190,8 @@ for pp=1:size(D_and,1)
     E_tot_per_km_and(pp) = E_tot_a(pp) / total_distance_and(pp);
 end
 
-total_distance_rit = zeros(size(D_rit,1),1);
-E_tot_per_km_rit = zeros(1,size(D_and,1));
+total_distance_rit = zeros(size(D_rit,1), 1);
+E_tot_per_km_rit = zeros(size(D_and,1), 1);
 for pp=1:size(D_rit,1)
     Lat = D_rit(pp).Position.latitude;
     Lon = D_rit(pp).Position.longitude;
@@ -195,7 +199,7 @@ for pp=1:size(D_rit,1)
     E_tot_per_km_rit(pp) = E_tot_r(pp) / total_distance_rit(pp);
 end
 
-E_tot_per_km = [E_tot_per_km_and, E_tot_per_km_rit];
+E_tot_per_km = [E_tot_per_km_and; E_tot_per_km_rit];
 E_tot_per_km_avg = mean(E_tot_per_km); %kWh
 
 
