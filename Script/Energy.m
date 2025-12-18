@@ -13,7 +13,7 @@ t_s = seconds(time_acc - time_acc(1));
 g = 9.80665; % accelerazione di gravità
 Crr = 0.008; % coefficiente di attrito ruota strada
 rho = 1.225; % coefficiente attrito dell'aria
-CdA = 8; % area frontale bus per attrito aero
+CdA = 0.5*5.69; % area frontale bus per attrito aero
 eta = 0.8; % efficienza trasmissione tra batteria e ruote
 S = 0.4; %split factor tra freno meccanico e rigenerazione, parametro trovato su tesi
 
@@ -34,11 +34,11 @@ p_aux = 5000;
 %% calcolo potenza istantanea
 p_acc = m *a .*v_interp; %p_acc = d/dt Ec
 
-figure
-plot(time_acc , p_acc);
-grid on
-grid minor
-title('potenza istantanea (solo m*a*v)')
+% figure
+% plot(time_acc , p_acc);
+% grid on
+% grid minor
+% title('potenza istantanea (solo m*a*v)')
 
 %% calcolo potenza attrito ruota gomma
 p_roll = m * g * Crr .* v_interp;
@@ -56,18 +56,18 @@ p_mot_out(p_mot_raw<0) = 0;
 p_reg = p_mot_raw;
 p_reg(p_mot_raw>=0) = 0;
 p_reg(p_mot_raw<0) = p_mot_raw(p_mot_raw<0)*S;
-figure
-plot(time_acc, p_acc);
-grid on;
-title('d/dt Ec');
+% figure
+% plot(time_acc, p_acc);
+% grid on;
+% title('d/dt Ec');
 
 p_tot = (p_mot_out./eta + p_reg.*eta) + p_aux; %assumendo la stessa efficienza sia per batt --> ruote che per ruote --> batt
 p_tot_no_regen = (p_mot_out./eta) + p_aux;
-figure
-plot(time_acc , p_tot);
-grid on
-grid minor
-title('potenza istantanea batteria con rigenerazione')
+% figure
+% plot(time_acc , p_tot);
+% grid on
+% grid minor
+% title('potenza istantanea batteria con rigenerazione')
 
 E_tot = trapz(t_s, p_tot)/3.6e6; %in kWh
 % disp(E_no_regen);
