@@ -85,7 +85,6 @@ for i=1:size(D_and,1)
 end
 
 %% RITORNO
-
 E_tot_r = NaN(size(D_rit,1), 1); %con rigenerazione
 E_no_regen_r = NaN(size(D_rit,1), 1); %senza rigenerazione
 p_acc_r = cell(numel(D_rit),1); % vettori potenza solo v*a
@@ -142,15 +141,14 @@ for i=1:size(D_rit,1)
     f_GPS = (0:N-1)*(fs_GPS/N);
     
     %% richiamo energy
-    [E_tot_r(i), E_no_regen_r(i), p_acc_r{i}, p_tot_r{i}] = Energy(a_filt, speed, time_GPS, time_acc); %in 
-
-  
+    [E_tot_r(i), E_no_regen_r(i), p_acc_r{i}, p_tot_r{i}] = Energy(a_filt, speed, time_GPS, time_acc); %in kWh
 end
+
 %% Calcolo tempi medi di fermata per ogni fermata
 speed_treshold = 0.3; % treshold velocità per identificazione punti bus fermo alla fermata
 position_treshold = 15; % treshold posizione per identificazione punti bus fermo alla fermata
 %ANDATA
-%Creo le matrici che servono per calcolare la diotstanza di tutte le possibili coppie coordinata_corrente - coordinata_fermata
+%Creo le matrici che servono per calcolare la distanza di tutte le possibili coppie coordinata_corrente - coordinata_fermata
 [Lat_And, Stops_Lat_And] = arrayfun(@(x) ndgrid(x.Position.latitude(x.Position.speed < speed_treshold), stops_lat_and), D_and, 'UniformOutput', false);
 [Lon_And, Stops_Lon_And] = arrayfun(@(x) ndgrid(x.Position.longitude(x.Position.speed < speed_treshold), stops_long_and), D_and, 'UniformOutput', false);
 
@@ -200,6 +198,28 @@ E_tot_per_km_avg = mean(E_tot_per_km); %kWh
 
 
 %%
+% Parametri della batteria
+battery_capacity = 300; % Capacità della batteria in kWh
+initial_charge = battery_capacity; % Carica iniziale della batteria
 
+% Calcolo dello stato di carica nel tempo
+soc_and = initial_charge - cumtrapz(D_and(1).Acceleration.Timestamp, p_tot_a{1}); % Stato di carica durante l'andata
+soc_rit = initial_charge - (E_tot_r(1)); % Stato di carica durante il ritorno
+
+% Creazione del vettore temporale per il grafico
+time_vector_and = arrayfun(@(x) x.Acceleration.Timestamp, D_and, 'UniformOutput', false);
+time_vector_rit = arrayfun(@(x) x.Acceleration.Timestamp, D_rit, 'UniformOutput', false);
+
+% Creazione del grafico
+figure;
+hold on;
+plot(cell2mat(time_vector_and), soc_and, 'b', 'DisplayName', 'Andata');
+plot(cell2mat(time_vector_rit), soc_rit, 'r', 'DisplayName', 'Ritorno');
+xlabel('Tempo');
+ylabel('State of Charge (kWh)');
+title('State of Charge della Batteria nel Tempo');
+legend('show');
+grid on;
+hold off;
 
 toc

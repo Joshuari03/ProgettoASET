@@ -65,6 +65,26 @@ bar(Mean_ST_rit(1:end))
 title("tempi di feramata ritorno")
 xlabel("fermate")
 ylabel("secondi fermata")
+
+
+p_tot = cellfun(@(x, y) [x; y], p_tot_a, p_tot_r, "UniformOutput",false);
+
+figure
+for i = 1:length(D_and)
+  % plot SoC
+    % Parametri della batteria
+    battery_capacity = 300; % Capacità della batteria in kWh
+    initial_charge = battery_capacity; % Carica iniziale della batteria
+    
+    % Calcolo dello stato di carica nel tempo
+    ttt_and = seconds(D_and(i).Acceleration.Timestamp - D_and(i).Acceleration.Timestamp(1));
+    ttt_rit = seconds(D_rit(i).Acceleration.Timestamp - D_rit(i).Acceleration.Timestamp(1)); % Calcolo del tempo per il ritorno
+    ttt = [ttt_and ; max(ttt_and)+ttt_rit];
+    soc = initial_charge - cumtrapz(ttt, p_tot{i})/3.6e6;
+    plot(ttt ,soc/battery_capacity*100)
+    grid on
+    hold on
+end
 %%
 %% Condizioni nominali
 d   = 0.17;          % 170 mm air‑gap (nominal)
@@ -132,3 +152,4 @@ xlabel('Distance d (m)');
 ylabel('Mis‑alignment (fraction)');
 zlabel('Delivered Power (kW)');
 title('Delivered Power as a function of Distance and Mis‑alignment');              
+
