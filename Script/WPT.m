@@ -91,9 +91,18 @@ for i = 1:length(D_and)
     ttt = [ttt_and ; max(ttt_and)+ttt_rit];
     soc = initial_charge - cumtrapz(ttt, p_tot{i})/3.6e6;
     plot(ttt ,soc/battery_capacity*100)
-    grid on
+    
     hold on
 end
+title("Andamento SoC complessivo di A/R")
+yticks(0:1:100); % Imposta i tick dell'asse y per visualizzare la percentuale di SoC ogni 1%
+xlabel("Tempo tragitto A/R (s)")
+ylabel('Stato di carica (SoC) (%)'); % Etichetta dell'asse y
+ax = gca; % Ottieni l'asse corrente
+ax.YAxis.TickLabelFormat = '%d%%'; % Imposta il formato dei tick dell'asse y per includere il simbolo %
+grid on
+grid minor
+hold off
 %%
 %% Condizioni nominali
 d   = 0.17;          % 170 mm air‑gap (nominal)
