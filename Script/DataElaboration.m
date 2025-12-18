@@ -150,11 +150,7 @@ end
 speed_treshold = 0.3; % treshold velocità per identificazione punti bus fermo alla fermata
 position_treshold = 15; % treshold posizione per identificazione punti bus fermo alla fermata
 %ANDATA
-<<<<<<< HEAD
-%Creo le matrici che servono per calcolare la diotstanza di tutte le possibili coppie coordinata_corrente - coordinata_fermata
-=======
 %Creazione delle matrici che servono per calcolare la distanza di tutte le possibili coppie coordinata_corrente - coordinata_fermata
->>>>>>> origin/main
 [Lat_And, Stops_Lat_And] = arrayfun(@(x) ndgrid(x.Position.latitude(x.Position.speed < speed_treshold), stops_lat_and), D_and, 'UniformOutput', false);
 [Lon_And, Stops_Lon_And] = arrayfun(@(x) ndgrid(x.Position.longitude(x.Position.speed < speed_treshold), stops_long_and), D_and, 'UniformOutput', false);
 

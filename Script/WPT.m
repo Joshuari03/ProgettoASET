@@ -7,24 +7,24 @@ clc
 run("DataElaboration.m")
 tot_ST_and = sum(Mean_ST_and);
 tot_ST_rit = sum(Mean_ST_rit);
-
 d   = 0.17;          % 170 mm air‑gap (nominal)
 Ptx = 100e3;         % 100 kW
-mis = 0.05;          % perfect alignment
+mis = 0.05;
 E_battery = 300;     % 300 kWh di capacità
 
 Prx = polyphase_wpt_model(d,Ptx,mis) / 1e3;
-fprintf('Delivered power (nominal) = %.1f kW\n',Prx);
+
+fprintf('Delivered power (5% mis) = %.1f kW\n',Prx);
 
 %Recharged_energy_and = Prx * tot_ST_and / 3600;
 
 WPT_stops_and = false(1, length(Mean_ST_rit));
 WPT_stops_and([1 12]) = true; %indici delle fermate in cui si intende mettere le piattaforme di ricarica 
-% Mean_ST_and(WPT_stops_and) = [180 180]; %ipotizzando di fermarsi 3 min a Piazza 5 giornate e 3 min a Linate
+Mean_ST_and(WPT_stops_and) = [180 180]; %ipotizzando di fermarsi 3 min a Piazza 5 giornate e 3 min a Linate
 
 WPT_stops_rit = false(1, length(Mean_ST_rit));
 WPT_stops_rit([1 14]) = true; %indici delle fermate in cui si intende mettere le piattaforme di ricarica 
-% Mean_ST_rit(WPT_stops_rit) = [300 180]; %Ipotizzando di fermarsi 5 min a San Felicino e 3 min a Linate
+Mean_ST_rit(WPT_stops_rit) = [300 180]; %Ipotizzando di fermarsi 5 min a San Felicino e 3 min a Linate
 
 Recharged_energy_and = Prx * sum(Mean_ST_and(WPT_stops_and))/ 3600;
 Recharged_energy_and_percent = Recharged_energy_and / E_battery * 100;
