@@ -8,13 +8,13 @@ run("DataElaboration.m")
 tot_ST_and = sum(Mean_ST_and);
 tot_ST_rit = sum(Mean_ST_rit);
 d   = 0.17;          % 170 mm air‑gap (nominal)
-Ptx = 100e3;         % 100 kW
+Ptx = 200e3;         % 100 kW
 mis = 0.05;
 E_battery = 300;     % 300 kWh di capacità
 
 Prx = polyphase_wpt_model(d,Ptx,mis) / 1e3;
 
-fprintf('Delivered power (5% mis) = %.1f kW\n',Prx);
+fprintf('Delivered power (5 percent mis) = %.1f kW\n',Prx);
 
 %Recharged_energy_and = Prx * tot_ST_and / 3600;
 
@@ -43,7 +43,7 @@ fprintf('Avg consumption (return) = %.1f kWh, Percentage = %.1f %%\n',E_mean_rit
 
 fprintf('Recharged energy (outbund) (nominal) in percentage with respect to the avg consumption = %.1f %%\n',Recharged_energy_and / E_mean_and *100);
 fprintf('Recharged energy (return) (nominal) in percentage with respect to the avg consumption = %.1f %%\n',Recharged_energy_rit / E_mean_rit *100);
-fprintf('Total recharged energy in percentage with respect to the avg consumption = %.1f %%\n',Recharged_energy_and / E_mean_and *100 + Recharged_energy_rit / E_mean_rit *100);
+fprintf('Total recharged energy in percentage with respect to the avg consumption = %.1f %%\n', (Recharged_energy_and +Recharged_energy_rit)/ (E_mean_and + E_mean_rit) *100);
 
 Recharged_E_per_stop_and = Prx * (Mean_ST_and.*WPT_stops_and) / 3600; %a 0 le fermate in cui non si ricarica
 Recharged_E_per_stop_rit = Prx * (Mean_ST_rit.*WPT_stops_rit) / 3600; %a 0 le fermate in cui non si ricarica
